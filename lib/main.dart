@@ -12,7 +12,7 @@ class EDDPlaygroundApp extends StatelessWidget {
     return MaterialApp(
       title: 'EDD Playground',
       theme: ThemeData.dark(),
-      home: RhythmPlayer()
+      home: RhythmPlayerPage()
     );
   }
 
