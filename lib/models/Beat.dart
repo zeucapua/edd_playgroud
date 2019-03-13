@@ -1,11 +1,10 @@
 class Beat {
   int _value; // 1: whole, 2: half, 4: quarter, 8: eighth; TODO: Add more corresponding values
-  int _key;
   Duration _duration; // how long is this beat going to last;
   bool isBeat; // determine whether or not to play sound if 'played'
   //TODO: Add pitch/sound value (String for asset/ num for pitch emulation???)
 
-  Beat(this._value, this._key, this.isBeat) { _duration = Duration(milliseconds: 0); }
+  Beat(this._value, this.isBeat) { _duration = Duration(milliseconds: 0); }
 
   void setDuration(Duration tempoDuration, int timeSignatureBot) {
     if (timeSignatureBot == 4) {
@@ -28,5 +27,5 @@ class Beat {
   }
 
   Duration getDuration() { return _duration; }
-  int getValue() { return _value; } int getKey() { return _key; }
+  int getValue() { return _value; }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:edd_playgroud/pages/MetronomePage.dart';
-import 'package:edd_playgroud/pages/RhythmPlayer.dart';
+import 'package:edd_playgroud/pages/RhythmPlayerPage.dart';
 
 void main() => runApp(EDDPlaygroundApp());
 
