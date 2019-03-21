@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart'; import 'package:flutter/services.dart';
 import 'dart:async'; import 'package:edd_playgroud/models/Beat.dart';
 import 'package:edd_playgroud/widgets/BeatDisplay.dart';
-
+import 'package:edd_playgroud/models/NoteIcons.dart';
 
 class RhythmPlayerPage extends StatefulWidget { @override RhythmPlayerPageState createState() => new RhythmPlayerPageState(); }
 
@@ -12,7 +12,6 @@ class RhythmPlayerPageState extends State<RhythmPlayerPage> {
   int tempo, timeSignatureTop, timeSignatureBot, currentBeat;
   Timer timer; Duration tempoDuration;
 
-  final _tempoTextController = TextEditingController(); 
 
   @override
   void initState() {
@@ -22,7 +21,7 @@ class RhythmPlayerPageState extends State<RhythmPlayerPage> {
     currentBeat = 0;
     isBarPlaying = false;
 
-    tempo = 168; setTempoDuration();
+    setTempoDuration(168);
     timeSignatureTop = 4; timeSignatureBot = 4;
 
     bar = List<Beat>();
@@ -48,19 +47,19 @@ class RhythmPlayerPageState extends State<RhythmPlayerPage> {
 
           children: <Widget>[
 
-            // tempo
             FlatButton(
               child: Row(
                 children: <Widget>[
 
-                  Icon(IconData(0xe900, fontFamily: 'quarter'), color: Colors.white,),
+                  Icon(NoteIcons.quarter, color: Colors.white,),
 
                   Text(' = ' + tempo.toString())
 
                 ],
               ),
-              onPressed: () => changeTempo() ,
+              onPressed: () => showChangeTempo(),
             ),
+
 
             // 'bar'
             buildBarWidget()
@@ -73,7 +72,7 @@ class RhythmPlayerPageState extends State<RhythmPlayerPage> {
 
       floatingActionButton: FloatingActionButton(
           onPressed: () => toggleBarPlaying(),
-          child: Icon(IconData(0xe900, fontFamily: 'quarter'), color: Colors.white,),
+          child: Icon(NoteIcons.quarter),
       ),
 
 
@@ -81,15 +80,67 @@ class RhythmPlayerPageState extends State<RhythmPlayerPage> {
     );
   }
 
+  Widget buildBarWidget() {
+
+    //add one BeatDisplay per beat
+    widgetBar.clear();
+    bar.forEach((beat) => widgetBar.add(BeatDisplay(beat.getValue())));
+
+    print(widgetBar);
+
+    return Row( children: widgetBar );
+
+  }
+
   void toggleBarPlaying() {
+    setBeatDurations();
     if (!isBarPlaying) { isBarPlaying = true; currentBeat = 0; playBar(); }
     else { isBarPlaying = false; timer.cancel(); disableBeatDisplays();  }
     print(isBarPlaying);
   }
 
-  void setTempoDuration() { tempoDuration = Duration(milliseconds: (60000 / tempo).floor()); }
+  void setTempoDuration(int aTempo) {
+    tempo = aTempo;
+    tempoDuration = Duration(milliseconds: (60000 / tempo).floor());
+
+    print(tempo.toString() + ' ' + tempoDuration.toString());
+  }
 
   void setBeatDurations() { bar.forEach((beat) => beat.setDuration(tempoDuration, timeSignatureBot)); }
+
+  void showChangeTempo() {
+
+    TextEditingController controller = TextEditingController();
+    int toSet = tempo;
+
+    showDialog(
+      context: context,
+      builder: (builder) {
+        return AlertDialog(
+          title: Text('Change tempo'),
+          content: Container(
+            child: TextField(
+              controller: controller,
+              keyboardType: TextInputType.number,
+            ),
+          ),
+
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Confirm'),
+              onPressed: () => Navigator.pop(context)
+            )
+          ],
+        );
+      }
+    ).then((val) {
+      if (controller != null) { toSet = num.parse(controller.text); }
+      changeTempo(toSet);
+    });
+
+  }
+
+  void changeTempo(int toSet) { setTempoDuration(toSet); setBeatDurations(); }
 
   void playBar() {
     timer.cancel();
@@ -112,46 +163,6 @@ class RhythmPlayerPageState extends State<RhythmPlayerPage> {
     }
   }
 
-  Widget buildBarWidget() {
-
-    //add one BeatDisplay per beat
-    widgetBar.clear();
-    bar.forEach((beat) => widgetBar.add(BeatDisplay(beat.getValue())));
-
-    print(widgetBar);
-
-    return Row( children: widgetBar );
-
-  }
-
   void disableBeatDisplays() { widgetBar.forEach((display) => display.setIsPlaying(false)); }
 
-  void changeTempo() {
-
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext builder) {
-
-        return Container(
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-
-              TextField(controller: _tempoTextController,),
-              FlatButton(onPressed: () => {}, child: Icon(Icons.check))
-
-            ],
-          ),
-        );
-
-      }
-    ).whenComplete( () {
-      if (mounted) { setState(() {
-        tempo = int.parse(_tempoTextController.toString());
-        print(tempo);
-      }); }
-    });
-
-
-  }
 }

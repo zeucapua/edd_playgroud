@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:edd_playgroud/models/NoteIcons.dart';
+
 
 class BeatDisplay extends StatefulWidget {
 
@@ -29,31 +31,31 @@ class BeatDisplayState extends State<BeatDisplay> {
     switch (_value) {
       case 1:
         _icon = Icon(
-          IconData(0xe900, fontFamily: 'whole'),
+          NoteIcons.whole,
           color: _isPlaying ? Colors.white : Colors.black,
           size: 50.0,
         ); break;
       case 2:
         _icon = Icon(
-          IconData(0xe900, fontFamily: 'half'),
+          NoteIcons.half,
           color: _isPlaying ? Colors.white : Colors.black,
           size: 50.0,
         ); break;
       case 4:
         _icon = Icon(
-          IconData(0xe900, fontFamily: 'quarter'),
+          NoteIcons.quarter,
           color: _isPlaying ? Colors.white : Colors.black,
           size: 50.0,
         ); break;
       case 8:
         _icon = Icon(
-          IconData(0xe900, fontFamily: 'eighth'),
+          NoteIcons.eighth,
           color: _isPlaying ? Colors.white : Colors.black,
           size: 50.0,
         ); break;
       default:
         _icon = Icon(
-          IconData(0xe900, fontFamily: 'whole'),
+          NoteIcons.sixteenth,
           color: _isPlaying ? Colors.white : Colors.black,
         ); break;
     }
