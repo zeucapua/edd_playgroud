@@ -44,7 +44,7 @@ class MetronomePageState extends State<MetronomePage> {
 
             buildBarWidget(),
 
-            //TODO: add TextField to change tempo
+            //TODO: add ChangeTempo function and dialog from RhythmPlayerPage
 
             RaisedButton(
               onPressed: () => toggleMetronome(),

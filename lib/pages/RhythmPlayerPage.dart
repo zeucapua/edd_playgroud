@@ -2,6 +2,7 @@ import 'package:flutter/material.dart'; import 'package:flutter/services.dart';
 import 'dart:async'; import 'package:edd_playgroud/models/Beat.dart';
 import 'package:edd_playgroud/widgets/BeatDisplay.dart';
 import 'package:edd_playgroud/models/NoteIcons.dart';
+import 'package:flutter_midi/flutter_midi.dart';
 
 class RhythmPlayerPage extends StatefulWidget { @override RhythmPlayerPageState createState() => new RhythmPlayerPageState(); }
 
@@ -34,6 +35,16 @@ class RhythmPlayerPageState extends State<RhythmPlayerPage> {
 
     widgetBar = List<BeatDisplay>();
     timer = Timer(tempoDuration, () => print('init'));
+
+    // load piano sound
+    load('assets/sounds/Steinway+Grand+Piano+ER3A.sf2');
+
+  }
+
+  void load(String asset) async {
+    FlutterMidi.unmute();
+    ByteData byte = await rootBundle.load(asset);
+    FlutterMidi.prepare(sf2: byte);
   }
 
   @override
@@ -156,10 +167,10 @@ class RhythmPlayerPageState extends State<RhythmPlayerPage> {
       widgetBar.elementAt(currentBeat).setIsPlaying(true);
 
 
-      SystemSound.play(SystemSoundType.click);
+      FlutterMidi.playMidiNote(midi: bar.elementAt(currentBeat).getNote());
 
       currentBeat++; if (currentBeat == bar.length) { currentBeat = 0; }
-      timer = Timer(current.getDuration(), () => playBar());
+      timer = Timer(current.getDuration(), () =>  playBar() );
     }
   }
 

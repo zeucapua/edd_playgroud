@@ -11,7 +11,8 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^0.1.2
-  audioplayers: ^0.8.0
+  flutter_midi: ^0.2.0
+
 
 dev_dependencies:
   flutter_test:
@@ -21,6 +22,9 @@ dev_dependencies:
 flutter:
 
   uses-material-design: true
+
+  assets:
+    - assets/sounds/Steinway+Grand+Piano+ER3A.sf2
 
   fonts:
     - family: whole
